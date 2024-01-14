@@ -38,13 +38,5 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ steps.meta.outputs.tags }}
+          tags: ${{ steps.meta.outputs.tags }}-suffix
           labels: ${{ steps.meta.outputs.labels }}
-#          tags: ${{ github.repository }}
-#          labels: ${{ steps.meta.outputs.labels }}
-#      - name: Setup Go ${{ matrix.go-version }}
-#        uses: actions/setup-go@v4
-#        with:
-#          go-version: ${{ matrix.go-version }}
-#      - name: Display Go version
-#        run: go version
