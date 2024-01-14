@@ -33,7 +33,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ github.repository }}:base
+          tags: ${{ github.repository }}
 #          labels: ${{ steps.meta.outputs.labels }}
 #      - name: Setup Go ${{ matrix.go-version }}
 #        uses: actions/setup-go@v4
