@@ -33,10 +33,17 @@ jobs:
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image
+      - name: Build and push Docker image PING
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: apps/pingserver
           push: true
-          tags: ${{ steps.meta.outputs.tags }}-suffix
+          tags: ${{ steps.meta.outputs.tags }}-pingpong
+          labels: ${{ steps.meta.outputs.labels }}
+      - name: Build and push Docker image HI
+        uses: docker/build-push-action@v5
+        with:
+          context: apps/hiserver
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}-hiserver
           labels: ${{ steps.meta.outputs.labels }}
