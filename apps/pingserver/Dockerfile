@@ -12,7 +12,7 @@ WORKDIR /build
 
 ADD go.mod .
 
-#ADD go.sum .
+##ADD go.sum .
 
 RUN go mod download
 
