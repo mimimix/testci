@@ -37,7 +37,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: images
-          key: shared-files-${{ runner.os }}
+          key: docker-images-${{ runner.os }}
 #          docker save -o /tmp/${{ matrix.target }}.tar base:${{ matrix.target }}
 #      - name: Upload artifact
 #        uses: actions/upload-artifact@v3
@@ -82,7 +82,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: images
-          key: shared-files-${{ runner.os }}
+          key: docker-images-${{ runner.os }}
 #      - name: Download artifact
 #        uses: actions/download-artifact@v3
 #        with:
