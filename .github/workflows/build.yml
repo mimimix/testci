@@ -45,6 +45,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: Start build ${{ matrix.target }}
         run: |
+          docker images
+          
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
           echo IMAGE_ID=$IMAGE_ID
           
