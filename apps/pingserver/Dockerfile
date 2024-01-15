@@ -15,7 +15,7 @@ FROM base:go_builder as builder
 RUN apk update --no-cache && apk add --no-cache tzdata
 WORKDIR /build
 
-ADD go.mod .
+ADD ./apps/pingserver/go.mod .
 RUN go mod download
 
 COPY . .
