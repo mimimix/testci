@@ -106,14 +106,14 @@ jobs:
         with:
           file: ./apps/${{ matrix.target }}/Dockerfile
           context: .
-          tags: ${{ IMAGE_ID }}:latest
+          tags: docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
-          build-args: PATH_TO_MAIN=${{ PATH_TO_MAIN }}
-        env:
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
-          PATH_TO_MAIN=./apps/${{ matrix.target }}
+          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
+#        env:
+#          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+#          PATH_TO_MAIN=./apps/${{ matrix.target }}
 #      - name: Preparing build ${{ matrix.target }}
 #        run: |
 #          docker images
