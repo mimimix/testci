@@ -13,10 +13,12 @@
 FROM base:go_builder as builder
 
 RUN apk update --no-cache && apk add --no-cache tzdata
+ARG PATH_TO_MAIN=default_value
+
 WORKDIR /build
 
-ADD ./apps/pingserver/go.mod .
-ADD ./apps/pingserver/go.sum .
+ADD $PATH_TO_MAIN/go.mod .
+ADD $PATH_TO_MAIN/go.sum .
 RUN go mod download
 
 COPY . .
@@ -24,15 +26,15 @@ COPY . .
 ENV CGO_ENABLED 0
 ENV GOOS linux
 
-RUN go build -ldflags="-s -w" -o /app/main ./apps/pingserver/main.go
+RUN go build -ldflags="-s -w" -o /app/main $PATH_TO_MAIN/main.go
 
 FROM alpine
 
-RUN apk update --no-cache && apk add --no-cache ca-certificates # && apk add --no-cache tzdata
+RUN apk update --no-cache && apk add --no-cache ca-certificates
 
-COPY --from=builder /usr/share/zoneinfo/America/New_York /usr/share/zoneinfo/America/New_York
+COPY --from=builder /usr/share/zoneinfo/Europe/Moscow /usr/share/zoneinfo/Europe/Moscow
 
-ENV TZ America/New_York
+ENV TZ Europe/Moscow
 
 WORKDIR /app
 
