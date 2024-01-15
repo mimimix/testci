@@ -72,7 +72,7 @@ jobs:
           key: docker-images-${{ runner.os }}
       - name: Load image
         run: |
-          docker load --input images/go_builder.tar
+          docker buildx load --input images/go_builder.tar
           docker image ls -a
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
@@ -85,7 +85,7 @@ jobs:
       - name: Preparing builder - ${{ matrix.target }}
         uses: docker/build-push-action@v3
         with:
-          file: ./apps/${{ matrix.target }}/base.Dockerfile
+          file: ./apps/${{ matrix.target }}/Dockerfile
           context: .
           tags: docker.pkg.github.com/${{ github.repository }}/meow-${{ matrix.target }}:latest
           cache-from: type=gha
