@@ -72,6 +72,8 @@ jobs:
         with:
           path: images
           key: docker-images-${{ runner.os }}
+      - name: Install docker buildx
+        uses: docker/setup-buildx-action@v3
       - name: Load image
         run: |
           docker load --input images/go_builder.tar
@@ -82,8 +84,6 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      #- name: Install docker buildx
-      #  uses: docker/setup-buildx-action@v3
       - name: Preparing builder - ${{ matrix.target }}
         uses: docker/build-push-action@v3
         with:
