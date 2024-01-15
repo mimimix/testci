@@ -23,8 +23,6 @@ jobs:
           - go_builder
     steps:
       - uses: actions/checkout@v4
-#      - name: Create folder for docker cache
-#        run: mkdir dockerCache
       - name: Load cache for builder - ${{ matrix.target }}
         uses: actions/cache@v3
         with:
@@ -42,15 +40,6 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
-
-#      - name: Preparing builder - ${{ matrix.target }}
-#        run: |
-#          docker build -f ./base.Dockerfile \
-#          -t base:${{ matrix.target }} \
-#          --target ${{ matrix.target }} \
-#          --cache-from type=gha,src=dockerCache \
-#          --cache-to type=gha,mode=max,src=dockerCache \
-#          .
       - name: Save docker image
         run: |
           docker images
@@ -106,11 +95,6 @@ jobs:
         with:
           path: images
           key: docker-images-${{ runner.os }}
-#      - name: Download artifact
-#        uses: actions/download-artifact@v3
-#        with:
-#          name: go_builder
-#          path: /tmp
       - name: Load image
         run: |
           docker load --input images/go_builder.tar
@@ -118,14 +102,18 @@ jobs:
       - name: Preparing build ${{ matrix.target }}
         run: |
           docker images
+          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" > $GITHUB_ENV
+          echo IMAGE_ID=$IMAGE_ID
+          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" > $GITHUB_ENV
+          echo PATH_TO_MAIN=$PATH_TO_MAIN
+      - name: Push build ${{ matrix.target }}
+        run: |
+          echo IMAGE_ID=$IMAGE_ID
+          echo PATH_TO_MAIN=$PATH_TO_MAIN
 
 #          export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
-          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" >> $GITHUB_ENV
-          echo IMAGE_ID=$IMAGE_ID
 
 #          export PATH_TO_MAIN=./apps/${{ matrix.target }}
-          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" >> $GITHUB_ENV
-          echo PATH_TO_MAIN=$PATH_TO_MAIN
 #
 #          docker build -f $PATH_TO_MAIN/Dockerfile \
 #          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
@@ -148,42 +136,3 @@ jobs:
 #          cache-to: type=gha,mode=max
 #          load: true
 #          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
-      - name: Push build ${{ matrix.target }}
-        run: |
-          echo IMAGE_ID=$IMAGE_ID
-          echo PATH_TO_MAIN=$PATH_TO_MAIN
-#
-#          -t ${{ github.actor }}/testci-${{ matrix.target }}:latest .
-#          --cache-from type=gha,scope=twir-base:${{ matrix.target }} \
-#          --cache-to type=gha,mode=max,scope=twir-base:${{ matrix.target }} \
-#    steps:
-#      - name: Checkout Repository
-#        uses: actions/checkout@v4
-#      - name: Log in to the Container registry
-#        uses: docker/login-action@v3
-#        with:
-#          registry: ${{ env.REGISTRY }}
-#          username: ${{ github.actor }}
-#          password: ${{ secrets.GITHUB_TOKEN }}
-#      - name: Extract metadata (tags, labels) for Docker
-#        id: meta
-#        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-#        with:
-#          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-#      - name: Build and push Docker image PING
-#        uses: docker/build-push-action@v5
-#        with:
-#          context: apps/pingserver
-#          file: apps/pingserver/base.Dockerfile
-#          push: true
-#          tags: ${{ steps.meta.outputs.tags }}-pingpong
-#          labels: ${{ steps.meta.outputs.labels }}
-
-
-#      - name: Build and push Docker image HI
-#        uses: docker/build-push-action@v5
-#        with:
-#          context: apps/hiserver
-#          push: true
-#          tags: ${{ steps.meta.outputs.tags }}-hiserver
-#          labels: ${{ steps.meta.outputs.labels }}
