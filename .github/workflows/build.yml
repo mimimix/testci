@@ -105,7 +105,7 @@ jobs:
           docker build -f $PATH_TO_MAIN/Dockerfile \
           --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
           --tag $IMAGE_NAME \
-          -t bld:${{ matrix.target }}
+          -t bld:${{ matrix.target }} \
           .
 
           docker tag $IMAGE_NAME $IMAGE_ID:latest
