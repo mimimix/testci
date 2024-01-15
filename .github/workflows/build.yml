@@ -102,9 +102,9 @@ jobs:
       - name: Preparing build ${{ matrix.target }}
         run: |
           docker images
-          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" > $GITHUB_ENV
+          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" >> $GITHUB_ENV
           echo IMAGE_ID=$IMAGE_ID
-          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" > $GITHUB_ENV
+          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" >> $GITHUB_ENV
           echo PATH_TO_MAIN=$PATH_TO_MAIN
       - name: Push build ${{ matrix.target }}
         run: |
