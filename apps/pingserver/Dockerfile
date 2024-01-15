@@ -23,7 +23,7 @@ COPY . .
 ENV CGO_ENABLED 0
 ENV GOOS linux
 
-RUN go build -ldflags="-s -w" -o /apps/pingserver/main ./main.go
+RUN go build -ldflags="-s -w" -o /app/main ./apps/pingserver/main.go
 
 FROM alpine
 
