@@ -29,7 +29,15 @@ jobs:
           -t base:${{ matrix.target }} \
           --target ${{ matrix.target }} \
           .
-          
+      - name: Save docker image
+        run: |
+          mkdir images
+          docker save -o images/${{ matrix.target }}.tar base:${{ matrix.target }}
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: images
+          key: shared-files-${{ runner.os }}
 #          docker save -o /tmp/${{ matrix.target }}.tar base:${{ matrix.target }}
 #      - name: Upload artifact
 #        uses: actions/upload-artifact@v3
@@ -70,15 +78,20 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
       - uses: actions/checkout@v4
+      - name: Restore cached dependencies
+        uses: actions/cache@v3
+        with:
+          path: images
+          key: shared-files-${{ runner.os }}
 #      - name: Download artifact
 #        uses: actions/download-artifact@v3
 #        with:
 #          name: go_builder
 #          path: /tmp
-#      - name: Load image
-#        run: |
-#          docker load --input /tmp/go_builder.tar
-#          docker image ls -a
+      - name: Load image
+        run: |
+          docker load --input images/go_builder.tar
+          docker image ls -a
       - name: Start build ${{ matrix.target }}
         run: |
           docker images
