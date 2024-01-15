@@ -130,6 +130,8 @@ jobs:
           --tag $IMAGE_NAME \
           -t bld:${{ matrix.target }} \
           .
+          
+          docker push $IMAGE_ID:latest
 #          docker tag $IMAGE_NAME $IMAGE_ID:latest
 #      - name: Install docker buildx
 #        uses: docker/setup-buildx-action@v3
@@ -143,9 +145,9 @@ jobs:
 ##          cache-to: type=gha,mode=max
 #          load: true
 #          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
-      - name: Push build ${{ matrix.target }}
-        run: |
-          docker push docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}:latest
+#      - name: Push build ${{ matrix.target }}
+#        run: |
+#
 
 #          -t ${{ github.actor }}/testci-${{ matrix.target }}:latest .
 #          --cache-from type=gha,scope=twir-base:${{ matrix.target }} \
