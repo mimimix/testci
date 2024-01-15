@@ -48,3 +48,81 @@
 #          push: true
 #          tags: ${{ steps.meta.outputs.tags }}-hiserver
 #          labels: ${{ steps.meta.outputs.labels }}
+
+#      - name: Install docker buildx
+#        uses: docker/setup-buildx-action@v3
+#      - name: Preparing builder - ${{ matrix.target }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: ./base.Dockerfile
+#          context: .
+#          tags: base:${{ matrix.target }}
+#          target: ${{ matrix.target }}
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#          load: true
+
+
+#      - name: Install docker buildx
+#        uses: docker/setup-buildx-action@v3
+#      - name: Preparing builder - ${{ matrix.target }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: ./apps/${{ matrix.target }}/Dockerfile
+#          context: .
+#          tags: docker.pkg.github.com/${{ github.repository }}/${{ env.IMAGE_NAME }}-${{ matrix.target }}:latest
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#          load: true
+#          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
+
+#        env:
+#          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+#          PATH_TO_MAIN=./apps/${{ matrix.target }}
+#      - name: Preparing build ${{ matrix.target }}
+#        run: |
+#          docker images
+#          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" >> $GITHUB_ENV
+#          echo IMAGE_ID=$IMAGE_ID
+#          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" >> $GITHUB_ENV
+#          echo PATH_TO_MAIN=$PATH_TO_MAIN
+#      - name: Push build ${{ matrix.target }}
+#        run: |
+#          echo IMAGE_ID=$IMAGE_ID
+#          echo PATH_TO_MAIN=$PATH_TO_MAIN
+#          export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+#          export PATH_TO_MAIN=./apps/${{ matrix.target }}
+#
+#          docker build -f $PATH_TO_MAIN/Dockerfile \
+#          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
+#          --tag $IMAGE_ID:latest \
+#          -t bld:${{ matrix.target }} \
+#          .
+#
+#          docker tag $IMAGE_NAME $IMAGE_ID:latest
+#          docker push $IMAGE_ID:latest
+
+
+#          docker save -o /tmp/${{ matrix.target }}.tar base:${{ matrix.target }}
+#      - name: Upload artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: ${{ matrix.target }}
+#          path: /tmp/${{ matrix.target }}.tar
+#      - name: Log into registry
+#        run: |
+#          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
+#      - uses: actions/checkout@v4
+#      - name: Start build pingserver
+#        run: |
+#          docker images
+#
+#          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-pingserver
+#          echo IMAGE_ID=$IMAGE_ID
+#
+#          docker build -f ./apps/pingserver/Dockerfile \
+#          --tag $IMAGE_NAME \
+#          .
+#
+#          docker tag $IMAGE_NAME $IMAGE_ID:latest
+#          docker push $IMAGE_ID:latest
