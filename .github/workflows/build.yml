@@ -102,10 +102,13 @@ jobs:
       - name: Preparing build ${{ matrix.target }}
         run: |
           docker images
-          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" >> $GITHUB_ENV
-          echo IMAGE_ID=$IMAGE_ID
-          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" >> $GITHUB_ENV
-          echo PATH_TO_MAIN=$PATH_TO_MAIN
+#          echo "export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}" >> $GITHUB_ENV
+#          echo IMAGE_ID=$IMAGE_ID
+#          echo "export PATH_TO_MAIN=./apps/${{ matrix.target }}" >> $GITHUB_ENV
+#          echo PATH_TO_MAIN=$PATH_TO_MAIN
+        env:
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          PATH_TO_MAIN=./apps/${{ matrix.target }}
       - name: Push build ${{ matrix.target }}
         run: |
           echo IMAGE_ID=$IMAGE_ID
