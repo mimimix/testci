@@ -16,6 +16,7 @@ RUN apk update --no-cache && apk add --no-cache tzdata
 WORKDIR /build
 
 ADD ./apps/pingserver/go.mod .
+ADD ./apps/pingserver/go.sum .
 RUN go mod download
 
 COPY . .
