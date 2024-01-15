@@ -42,8 +42,8 @@ jobs:
       - name: Log into registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
+      - uses: actions/checkout@v4
       - name: Start build ${{ matrix.target }}
-        uses: actions/checkout@v4
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
           echo IMAGE_ID=$IMAGE_ID
