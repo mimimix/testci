@@ -115,34 +115,34 @@ jobs:
         run: |
           docker load --input images/go_builder.tar
           docker image ls -a
-#      - name: Preparing build ${{ matrix.target }}
-#        run: |
-#          docker images
-#
-#          export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
-#          echo IMAGE_ID=$IMAGE_ID
-#
-#          export PATH_TO_MAIN=./apps/${{ matrix.target }}
-#          echo PATH_TO_MAIN=$PATH_TO_MAIN
-#
-#          docker build -f $PATH_TO_MAIN/Dockerfile \
-#          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
-#          --tag $IMAGE_NAME \
-#          -t bld:${{ matrix.target }} \
-#          .
+      - name: Preparing build ${{ matrix.target }}
+        run: |
+          docker images
+
+          export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          echo IMAGE_ID=$IMAGE_ID
+
+          export PATH_TO_MAIN=./apps/${{ matrix.target }}
+          echo PATH_TO_MAIN=$PATH_TO_MAIN
+
+          docker build -f $PATH_TO_MAIN/Dockerfile \
+          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
+          --tag $IMAGE_NAME \
+          -t bld:${{ matrix.target }} \
+          .
 #          docker tag $IMAGE_NAME $IMAGE_ID:latest
-      - name: Install docker buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Preparing builder - ${{ matrix.target }}
-        uses: docker/build-push-action@v3
-        with:
-          file: ./apps/${{ matrix.target }}/Dockerfile
-          context: .
-          tags: ${{ env.IMAGE_NAME }}
-#          cache-from: type=gha
-#          cache-to: type=gha,mode=max
-          load: true
-          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
+#      - name: Install docker buildx
+#        uses: docker/setup-buildx-action@v3
+#      - name: Preparing builder - ${{ matrix.target }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: ./apps/${{ matrix.target }}/Dockerfile
+#          context: .
+#          tags: ${{ env.IMAGE_NAME }}
+##          cache-from: type=gha
+##          cache-to: type=gha,mode=max
+#          load: true
+#          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
       - name: Push build ${{ matrix.target }}
         run: |
           docker push docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}:latest
