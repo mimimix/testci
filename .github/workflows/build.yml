@@ -8,7 +8,8 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+#  IMAGE_NAME: ${{ github.repository }}
+  IMAGE_NAME: meow
 
 jobs:
   init:
@@ -18,29 +19,68 @@ jobs:
       packages: write
     strategy:
       matrix:
-        go-version: [ '1.21.6' ]
+        target:
+          - go_builder
     steps:
-      - name: Checkout Repository
+      - name: Preparing builder - ${{ matrix.target }}
         uses: actions/checkout@v4
-      - name: Log in to the Container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata (tags, labels) for Docker
-        id: meta
-        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push Docker image PING
-        uses: docker/build-push-action@v5
-        with:
-          context: apps/pingserver
-          file: apps/pingserver/Dockerfile
-          push: true
-          tags: ${{ steps.meta.outputs.tags }}-pingpong
-          labels: ${{ steps.meta.outputs.labels }}
+        run: |
+          docker build -f ./base.Dockerfile \
+          -t builder:${{ matrix.target }} \
+          --target ${{ matrix.target }} \
+          .
+
+  backend:
+    runs-on: ubuntu-latest
+    needs:
+      - init
+    strategy:
+      matrix:
+        target:
+          - pingserver
+    steps:
+      - name: Log into registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+      - name: Start build ${{ matrix.target }}
+        uses: actions/checkout@v4
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          echo IMAGE_ID=$IMAGE_ID
+          
+          docker build -f ./apps/${{ matrix.target }}/Dockerfile \
+          --tag $IMAGE_NAME \
+          .
+#          -t ${{ github.actor }}/testci-${{ matrix.target }}:latest .
+          
+          docker tag $IMAGE_NAME $IMAGE_ID:latest
+          docker push $IMAGE_ID:latest
+
+#          --cache-from type=gha,scope=twir-base:${{ matrix.target }} \
+#          --cache-to type=gha,mode=max,scope=twir-base:${{ matrix.target }} \
+#    steps:
+#      - name: Checkout Repository
+#        uses: actions/checkout@v4
+#      - name: Log in to the Container registry
+#        uses: docker/login-action@v3
+#        with:
+#          registry: ${{ env.REGISTRY }}
+#          username: ${{ github.actor }}
+#          password: ${{ secrets.GITHUB_TOKEN }}
+#      - name: Extract metadata (tags, labels) for Docker
+#        id: meta
+#        uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
+#        with:
+#          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+#      - name: Build and push Docker image PING
+#        uses: docker/build-push-action@v5
+#        with:
+#          context: apps/pingserver
+#          file: apps/pingserver/base.Dockerfile
+#          push: true
+#          tags: ${{ steps.meta.outputs.tags }}-pingpong
+#          labels: ${{ steps.meta.outputs.labels }}
+
+
 #      - name: Build and push Docker image HI
 #        uses: docker/build-push-action@v5
 #        with:
