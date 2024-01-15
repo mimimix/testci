@@ -139,8 +139,8 @@ jobs:
           file: ./apps/${{ matrix.target }}/Dockerfile
           context: .
           tags: ${{ env.IMAGE_NAME }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
           load: true
           build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
       - name: Push build ${{ matrix.target }}
