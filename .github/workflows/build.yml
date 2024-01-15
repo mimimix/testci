@@ -28,18 +28,26 @@ jobs:
         with:
           path: dockerCache
           key: docker-cache-${{ runner.os }}-${{ matrix.target }}
-      - name: Install docker buildx
-        uses: docker/setup-buildx-action@v3
       - name: Preparing builder - ${{ matrix.target }}
-        uses: docker/build-push-action@v3
-        with:
-          file: ./base.Dockerfile
-          context: .
-          tags: base:${{ matrix.target }}
-          target: ${{ matrix.target }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          load: true
+        run: |
+          docker buildx build -f ./base.Dockerfile \
+          -t base:${{ matrix.target }} \
+          --target ${{ matrix.target }} \
+          --cache-from type=gha,src=dockerCache \
+          --cache-to type=gha,mode=max,src=dockerCache \
+          .
+#      - name: Install docker buildx
+#        uses: docker/setup-buildx-action@v3
+#      - name: Preparing builder - ${{ matrix.target }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: ./base.Dockerfile
+#          context: .
+#          tags: base:${{ matrix.target }}
+#          target: ${{ matrix.target }}
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#          load: true
       - name: Save docker image
         run: |
           docker images
