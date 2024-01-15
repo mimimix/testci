@@ -56,6 +56,9 @@ jobs:
 
   backend:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     needs:
       - init
     strategy:
