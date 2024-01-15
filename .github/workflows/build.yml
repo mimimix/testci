@@ -99,18 +99,35 @@ jobs:
         run: |
           docker load --input images/go_builder.tar
           docker image ls -a
-      - name: Install docker buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Preparing builder - ${{ matrix.target }}
-        uses: docker/build-push-action@v3
-        with:
-          file: ./apps/${{ matrix.target }}/Dockerfile
-          context: .
-          tags: docker.pkg.github.com/${{ github.repository }}/${{ env.IMAGE_NAME }}-${{ matrix.target }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          load: true
-          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
+#      - name: Install docker buildx
+#        uses: docker/setup-buildx-action@v3
+#      - name: Preparing builder - ${{ matrix.target }}
+#        uses: docker/build-push-action@v3
+#        with:
+#          file: ./apps/${{ matrix.target }}/Dockerfile
+#          context: .
+#          tags: docker.pkg.github.com/${{ github.repository }}/${{ env.IMAGE_NAME }}-${{ matrix.target }}:latest
+#          cache-from: type=gha
+#          cache-to: type=gha,mode=max
+#          load: true
+#          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
+
+      - name: Start build ${{ matrix.target }}
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          echo IMAGE_ID=$IMAGE_ID
+          
+          PATH_TO_MAIN=./apps/${{ matrix.target }}
+          echo PATH_TO_MAIN=$PATH_TO_MAIN
+          
+          docker build -f $PATH_TO_MAIN/Dockerfile \
+          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
+          --tag $IMAGE_ID:latest \
+          -t bld:${{ matrix.target }} \
+          .
+          
+          docker push $IMAGE_ID:latest
+
 #        env:
 #          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
 #          PATH_TO_MAIN=./apps/${{ matrix.target }}
