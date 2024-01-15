@@ -82,16 +82,16 @@ jobs:
           registry: docker.pkg.github.com
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Install docker buildx
-        uses: docker/setup-buildx-action@v3
+      #- name: Install docker buildx
+      #  uses: docker/setup-buildx-action@v3
       - name: Preparing builder - ${{ matrix.target }}
         uses: docker/build-push-action@v3
         with:
           file: ./apps/${{ matrix.target }}/Dockerfile
           context: .
           tags: docker.pkg.github.com/${{ github.repository }}/meow-${{ matrix.target }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          #cache-from: type=gha
+          #cache-to: type=gha,mode=max
 #          load: true
           build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
           push: true
