@@ -41,6 +41,7 @@ jobs:
           target: ${{ matrix.target }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          load: true
 
 #      - name: Preparing builder - ${{ matrix.target }}
 #        run: |
