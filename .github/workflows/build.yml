@@ -138,10 +138,11 @@ jobs:
         with:
           file: $PATH_TO_MAIN/Dockerfile
           context: .
-          tags: $IMAGE_NAME
+          tags: ${{ IMAGE_NAME }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
+          build-args: PATH_TO_MAIN=${{ PATH_TO_MAIN }}
       - name: Push build ${{ matrix.target }}
         run: |
           docker push $IMAGE_ID:latest
