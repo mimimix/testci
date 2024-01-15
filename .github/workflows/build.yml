@@ -119,10 +119,10 @@ jobs:
         run: |
           docker images
 
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          export IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
           echo IMAGE_ID=$IMAGE_ID
           
-          PATH_TO_MAIN=./apps/${{ matrix.target }}
+          export PATH_TO_MAIN=./apps/${{ matrix.target }}
           echo PATH_TO_MAIN=$PATH_TO_MAIN
 
 #          docker build -f $PATH_TO_MAIN/Dockerfile \
