@@ -40,7 +40,8 @@ jobs:
           - pingserver
     steps:
       - name: Log into registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u ${{ github.actor }} --password-stdin
       - name: Start build ${{ matrix.target }}
         uses: actions/checkout@v4
         run: |
