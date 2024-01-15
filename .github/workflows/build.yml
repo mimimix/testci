@@ -22,8 +22,8 @@ jobs:
         target:
           - go_builder
     steps:
+      - uses: actions/checkout@v4
       - name: Preparing builder - ${{ matrix.target }}
-        uses: actions/checkout@v4
         run: |
           docker build -f ./base.Dockerfile \
           -t builder:${{ matrix.target }} \
