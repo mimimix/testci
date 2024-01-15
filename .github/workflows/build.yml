@@ -52,6 +52,7 @@ jobs:
 #          .
       - name: Save docker image
         run: |
+          docker images
           mkdir images
           docker save -o images/${{ matrix.target }}.tar base:${{ matrix.target }}
       - name: Save image ${{ matrix.target }} to cache
