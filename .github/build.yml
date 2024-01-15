@@ -60,10 +60,11 @@ jobs:
       matrix:
         target:
           - pingserver
+          - hiserver
     steps:
-#      - name: Log into registry
-#        run: |
-#          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
+      - name: Log into registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
       - uses: actions/checkout@v4
       - name: Restore cached dependencies
         uses: actions/cache@v3
@@ -74,38 +75,21 @@ jobs:
         run: |
           docker load --input images/go_builder.tar
           docker image ls -a
-      - name: Log in to the Container registry
-        uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
-        with:
-          registry: docker.pkg.github.com
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Preparing builder - ${{ matrix.target }}
-        uses: docker/build-push-action@v3
-        with:
-          file: ./apps/${{ matrix.target }}/base.Dockerfile
-          context: .
-          tags: docker.pkg.github.com/${{ github.repository }}/${{ IMAGE_NAME }}-${{ matrix.target }}:latest
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-#          load: true
-          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
-          push: true
 
-#      - name: Start build ${{ matrix.target }}
-#        run: |
-#          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
-#          echo IMAGE_ID=$IMAGE_ID
-#
-#          PATH_TO_MAIN=./apps/${{ matrix.target }}
-#          echo PATH_TO_MAIN=$PATH_TO_MAIN
-#
-#          docker buildx build -f $PATH_TO_MAIN/Dockerfile \
-#          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
-#          --tag $IMAGE_ID:latest \
-#          --cache-from type=gha \
-#          --cache-to type=gha,mode=max \
-#          -t bld:${{ matrix.target }} \
-#          .
-#
-#          docker push $IMAGE_ID:latest
+      - name: Start build ${{ matrix.target }}
+        run: |
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+          echo IMAGE_ID=$IMAGE_ID
+          
+          PATH_TO_MAIN=./apps/${{ matrix.target }}
+          echo PATH_TO_MAIN=$PATH_TO_MAIN
+          
+          docker buildx build -f $PATH_TO_MAIN/Dockerfile \
+          --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
+          --tag $IMAGE_ID:latest \
+          --cache-from type=gha \
+          --cache-to type=gha,mode=max \
+          -t bld:${{ matrix.target }} \
+          .
+          
+          docker push $IMAGE_ID:latest
