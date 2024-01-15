@@ -106,7 +106,7 @@ jobs:
         with:
           file: ./apps/${{ matrix.target }}/Dockerfile
           context: .
-          tags: docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}:latest
+          tags: docker.pkg.github.com/${{ github.repository }}/${{ IMAGE_NAME }}-${{ matrix.target }}:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
           load: true
