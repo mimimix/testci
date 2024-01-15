@@ -30,7 +30,7 @@ jobs:
           --target ${{ matrix.target }} \
           .
           
-          docker save -o ${{ matrix.target }}.tar base:${{ matrix.target }}
+          docker save -o /tmp/${{ matrix.target }}.tar base:${{ matrix.target }}
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
