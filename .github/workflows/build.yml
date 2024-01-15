@@ -72,7 +72,7 @@ jobs:
           key: docker-images-${{ runner.os }}
       - name: Load image
         run: |
-          docker buildx load --input images/go_builder.tar
+          docker load --input images/go_builder.tar
           docker image ls -a
       - name: Log in to the Container registry
         uses: docker/login-action@65b78e6e13532edd9afa3aa52ac7964289d1a9c1
