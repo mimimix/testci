@@ -26,7 +26,7 @@ jobs:
       - name: Preparing builder - ${{ matrix.target }}
         run: |
           docker build -f ./base.Dockerfile \
-          -t builder:${{ matrix.target }} \
+          -t base_${{ matrix.target }} \
           --target ${{ matrix.target }} \
           .
 
