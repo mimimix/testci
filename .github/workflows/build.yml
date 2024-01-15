@@ -29,33 +29,50 @@ jobs:
           -t base:${{ matrix.target }} \
           --target ${{ matrix.target }} \
           .
-
-  backend:
-    runs-on: ubuntu-latest
-    needs:
-      - init
-    strategy:
-      matrix:
-        target:
-          - pingserver
-    steps:
       - name: Log into registry
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
       - uses: actions/checkout@v4
-      - name: Start build ${{ matrix.target }}
+      - name: Start build pingserver
         run: |
           docker images
-          
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-pingserver
           echo IMAGE_ID=$IMAGE_ID
-          
-          docker build -f ./apps/${{ matrix.target }}/Dockerfile \
+
+          docker build -f ./apps/pingserver/Dockerfile \
           --tag $IMAGE_NAME \
           .
-          
+
           docker tag $IMAGE_NAME $IMAGE_ID:latest
           docker push $IMAGE_ID:latest
+
+#  backend:
+#    runs-on: ubuntu-latest
+#    needs:
+#      - init
+#    strategy:
+#      matrix:
+#        target:
+#          - pingserver
+#    steps:
+#      - name: Log into registry
+#        run: |
+#          echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
+#      - uses: actions/checkout@v4
+#      - name: Start build ${{ matrix.target }}
+#        run: |
+#          docker images
+#
+#          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/$IMAGE_NAME-${{ matrix.target }}
+#          echo IMAGE_ID=$IMAGE_ID
+#
+#          docker build -f ./apps/${{ matrix.target }}/Dockerfile \
+#          --tag $IMAGE_NAME \
+#          .
+#
+#          docker tag $IMAGE_NAME $IMAGE_ID:latest
+#          docker push $IMAGE_ID:latest
 
 #          -t ${{ github.actor }}/testci-${{ matrix.target }}:latest .
 #          --cache-from type=gha,scope=twir-base:${{ matrix.target }} \
