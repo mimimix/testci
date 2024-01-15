@@ -30,15 +30,17 @@ jobs:
         with:
           path: dockerCache
           key: docker-cache-${{ runner.os }}-${{ matrix.target }}
-      - name: Preparing custom builder - ${{ matrix.target }}
+      - name: Install docker buildx
         uses: docker/setup-buildx-action@v3
+      - name: Preparing custom builder - ${{ matrix.target }}
+        uses: docker/build-push-action@v3
         with:
           file: ./base.Dockerfile
           context: .
           tags: base:${{ matrix.target }}
           target: ${{ matrix.target }}
-          cache-from: type=local,src=dockerCache
-          cache-to: type=local,mode=max,src=dockerCache
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
 #      - name: Preparing builder - ${{ matrix.target }}
 #        run: |
