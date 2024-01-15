@@ -23,17 +23,26 @@ jobs:
           - go_builder
     steps:
       - uses: actions/checkout@v4
+      - name: Create folder for docker cache
+        run: mkdir dockerCache
+      - name: Load cache for builder - ${{ matrix.target }}
+        uses: actions/cache@v3
+        with:
+          path: dockerCache
+          key: docker-cache-${{ runner.os }}-${{ matrix.target }}
       - name: Preparing builder - ${{ matrix.target }}
         run: |
           docker build -f ./base.Dockerfile \
           -t base:${{ matrix.target }} \
           --target ${{ matrix.target }} \
+          --cache-from type=local,src=dockerCache \
+          --cache-to type=local,mode=max,src=dockerCache \
           .
       - name: Save docker image
         run: |
           mkdir images
           docker save -o images/${{ matrix.target }}.tar base:${{ matrix.target }}
-      - name: Cache dependencies
+      - name: Save image ${{ matrix.target }} to cache
         uses: actions/cache@v3
         with:
           path: images
