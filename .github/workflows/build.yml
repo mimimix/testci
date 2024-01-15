@@ -35,8 +35,8 @@ jobs:
           docker build -f ./base.Dockerfile \
           -t base:${{ matrix.target }} \
           --target ${{ matrix.target }} \
-          --cache-from type=local,src=dockerCache \
-          --cache-to type=local,mode=max,src=dockerCache \
+          --cache-from type=gha,src=dockerCache \
+          --cache-to type=gha,mode=max,src=dockerCache \
           .
       - name: Save docker image
         run: |
