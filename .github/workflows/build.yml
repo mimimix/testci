@@ -63,7 +63,6 @@ jobs:
           --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
           --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
           -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
-          #-v $(go env GOCACHE):/root/.cache/go build \
           .
 
           docker push $IMAGE_ID:latest
