@@ -50,7 +50,7 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
 
-      - name: Start build  - ${{ matrix.target }}
+      - name: Start build ${{ env.PROJECT_NAME }} - ${{ matrix.target }}
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.PROJECT_NAME }}-${{ matrix.target }}
           echo START BUILD WITH IMAGE_ID=$IMAGE_ID
@@ -61,8 +61,6 @@ jobs:
           docker build -f $PATH_TO_MAIN/Dockerfile \
           --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
           --tag $IMAGE_ID:latest \
-#          --cache-from type=gha \
-#          --cache-to type=gha,mode=max \
           -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
           .
 
