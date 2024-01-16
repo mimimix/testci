@@ -22,7 +22,7 @@ jobs:
         with:
           submodules: true
       - run: |
-          CURRENT_BUILD_NAME = ${{ env.PROJECT_NAME }}_base:${{ matrix.target }}
+          CURRENT_BUILD_NAME = ${{ $PROJECT_NAME }}_base:${{ matrix.target }}
           
           docker build -f ./base.Dockerfile \
           -t ${{ CURRENT_BUILD_NAME }} \
@@ -48,9 +48,9 @@ jobs:
       - uses: actions/checkout@v4
       - name: Login to GitHub Package Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
-      - name: Start build ${{ env.PROJECT_NAME }} - ${{ matrix.target }}
+      - name: Start build ${{ $PROJECT_NAME }} - ${{ matrix.target }}
         run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.PROJECT_NAME }}-${{ matrix.target }}
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ $PROJECT_NAME }}-${{ matrix.target }}
           echo START BUILD WITH IMAGE_ID=$IMAGE_ID
 
           PATH_TO_MAIN=./apps/${{ matrix.target }}
@@ -61,7 +61,7 @@ jobs:
           --tag $IMAGE_ID:latest \
 #          --cache-from type=gha \
 #          --cache-to type=gha,mode=max \
-          -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
+          -t ${{ $PROJECT_NAME }}:${{ matrix.target }} \
           .
 
           docker push $IMAGE_ID:latest
