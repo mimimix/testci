@@ -22,14 +22,12 @@ jobs:
         with:
           submodules: true
       - run: |
-          CURRENT_BUILD_NAME = ${{ env.PROJECT_NAME }}_base:${{ matrix.target }}
-          
           docker build -f ./base.Dockerfile \
-          -t ${{ CURRENT_BUILD_NAME }} \
+          -t ${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
           --target ${{ matrix.target }} \
           --tag base:${{ matrix.target }} \
-          --cache-from type=gha,scope=${{ CURRENT_BUILD_NAME }} \
-          --cache-to type=gha,mode=max,scope=${{ CURRENT_BUILD_NAME }} \
+          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
           .
 
   backend:
