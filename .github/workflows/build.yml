@@ -49,7 +49,7 @@ jobs:
       - name: Log into github packages
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
-      - name: Start build ${{ PROJECT_NAME }} - ${{ matrix.target }}
+      - name: Start build $PROJECT_NAME - ${{ matrix.target }}
         run: |
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ PROJECT_NAME }}-${{ matrix.target }}
           echo START BUILD WITH IMAGE_ID=$IMAGE_ID
