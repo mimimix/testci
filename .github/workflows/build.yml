@@ -22,7 +22,7 @@ jobs:
         with:
           submodules: true
       - run: |
-          CURRENT_BUILD_NAME = ${{ env.PROJECT_NAME }}_base:${{ matrix.target }}
+          CURRENT_BUILD_NAME = mememe_base:${{ matrix.target }}
           
           docker build -f ./base.Dockerfile \
           -t ${{ CURRENT_BUILD_NAME }} \
@@ -51,7 +51,7 @@ jobs:
 
 #      - name: Start build - ${{ matrix.target }}
       - run: |
-          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.PROJECT_NAME }}-${{ matrix.target }}
+          IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/mememe-${{ matrix.target }}
           echo START BUILD WITH IMAGE_ID=$IMAGE_ID
 
           PATH_TO_MAIN=./apps/${{ matrix.target }}
@@ -62,7 +62,7 @@ jobs:
           --tag $IMAGE_ID:latest \
 #          --cache-from type=gha \
 #          --cache-to type=gha,mode=max \
-          -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
+          -t mememe:${{ matrix.target }} \
           .
 
           docker push $IMAGE_ID:latest
