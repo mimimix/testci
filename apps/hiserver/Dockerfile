@@ -24,9 +24,10 @@ RUN go mod download
 COPY . .
 
 ENV CGO_ENABLED 0
-ENV GOOS linux
+ENV GOOS Linux
+ENV GOCACHE /home/user/cache/gobuild
 
-RUN go build -ldflags="-s -w" -o /app/main $PATH_TO_MAIN/main.go
+RUN --mount=type=cache,target=/home/user/cache/gobuild go build -ldflags="-s -w" -o /app/main $PATH_TO_MAIN/main.go
 
 FROM alpine
 
