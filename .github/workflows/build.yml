@@ -32,17 +32,6 @@ jobs:
           --cache-to type=gha,mode=max,scope=${{ CURRENT_BUILD_NAME }} \
           .
 
-  #      - name: Preparing builder - ${{ matrix.target }}
-  #        uses: docker/build-push-action@v3
-  #        with:
-  #          file: ./base.Dockerfile
-  #          context: .
-  #          tags: base:${{ matrix.target }}
-  #          target: ${{ matrix.target }}
-  #          cache-from: type=gha
-  #          cache-to: type=gha,mode=max
-  #          load: true
-
   backend:
     runs-on: self-hosted
     permissions:
@@ -60,18 +49,6 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login docker.pkg.github.com -u "${{ github.actor }}" --password-stdin
       - uses: actions/checkout@v4
-      #      - name: Preparing builder - ${{ matrix.target }}
-      #        uses: docker/build-push-action@v3
-      #        with:
-      #          file: ./apps/${{ matrix.target }}/Dockerfile
-      #          context: .
-      #          tags: docker.pkg.github.com/${{ github.repository }}/meow-${{ matrix.target }}:latest
-      #          cache-from: type=gha
-      #          cache-to: type=gha,mode=max
-      ##          load: true
-      #          build-args: PATH_TO_MAIN=./apps/${{ matrix.target }}
-      #          push: true
-
       - name: Start build ${{ PROJECT_NAME }} - ${{ matrix.target }}
         run: |
                IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ PROJECT_NAME }}-${{ matrix.target }}
@@ -83,8 +60,8 @@ jobs:
                docker build -f $PATH_TO_MAIN/Dockerfile \
                --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
                --tag $IMAGE_ID:latest \
-          #          --cache-from type=gha \
-          #          --cache-to type=gha,mode=max \
+#               --cache-from type=gha \
+#               --cache-to type=gha,mode=max \
                -t ${{ PROJECT_NAME }}:${{ matrix.target }} \
                .
                
