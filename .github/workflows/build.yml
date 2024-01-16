@@ -59,6 +59,8 @@ jobs:
           docker build -f $PATH_TO_MAIN/Dockerfile \
           --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
           --tag $IMAGE_ID:latest \
+          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
           -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
           .
 
