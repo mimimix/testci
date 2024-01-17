@@ -25,6 +25,7 @@ COPY . .
 
 ENV CGO_ENABLED 0
 ENV GOOS linux
+ENV GOCACHE /home/user/.cache/go-build
 
 RUN --mount=type=cache,target=/home/user/.cache/go-build go build -ldflags="-s -w" -o /app/main $PATH_TO_MAIN/main.go
 
