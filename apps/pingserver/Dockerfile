@@ -6,9 +6,6 @@
 #RUN apk update --no-cache && apk add --no-cache tzdata
 #
 #WORKDIR /build
-#
-#
-#ADD go.sum .
 
 FROM base:go_builder as builder
 
