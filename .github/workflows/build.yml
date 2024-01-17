@@ -54,7 +54,7 @@ jobs:
           IMAGE_ID=docker.pkg.github.com/${{ github.repository }}/${{ env.PROJECT_NAME }}-${{ matrix.target }}
           echo START BUILD WITH IMAGE_ID=$IMAGE_ID
 
-          PATH_TO_MAIN=./apps/${{ matrix.target }}
+          PATH_TO_MAIN=${{ matrix.target }}
           echo PATH_TO_MAIN=$PATH_TO_MAIN
 
           docker buildx build -f ./apps/apps.Dockerfile \
