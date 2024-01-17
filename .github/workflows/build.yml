@@ -10,33 +10,33 @@ env:
   PROJECT_NAME: test
 
 jobs:
-  init:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        target:
-          - go_builder
-    steps:
-      - uses: TooMuch4U/actions-clean@v2.1
-      - uses: actions/checkout@v4
-        with:
-          submodules: true
-      - run: |
-          docker build -f ./base.Dockerfile \
-          -t ${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
-          --target ${{ matrix.target }} \
-          --tag base:${{ matrix.target }} \
-          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
-          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
-          .
+#  init:
+#    runs-on: self-hosted
+#    strategy:
+#      matrix:
+#        target:
+#          - go_builder
+#    steps:
+#      - uses: TooMuch4U/actions-clean@v2.1
+#      - uses: actions/checkout@v4
+#        with:
+#          submodules: true
+#      - run: |
+#          docker build -f ./base.Dockerfile \
+#          -t ${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+#          --target ${{ matrix.target }} \
+#          --tag base:${{ matrix.target }} \
+#          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+#          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+#          .
 
   backend:
     runs-on: self-hosted
     permissions:
       contents: read
       packages: write
-    needs:
-      - init
+#    needs:
+#      - init
     strategy:
       matrix:
         target:
@@ -57,11 +57,11 @@ jobs:
           PATH_TO_MAIN=./apps/${{ matrix.target }}
           echo PATH_TO_MAIN=$PATH_TO_MAIN
 
-          docker buildx build -f $PATH_TO_MAIN/Dockerfile \
+          docker buildx build -f ./apps/apps.Dockerfile \
           --build-arg PATH_TO_MAIN=$PATH_TO_MAIN \
           --tag $IMAGE_ID:latest \
-          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
-          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}_base:${{ matrix.target }} \
+          --cache-from type=gha,scope=${{ env.PROJECT_NAME }}:${{ matrix.target }} \
+          --cache-to type=gha,mode=max,scope=${{ env.PROJECT_NAME }}:${{ matrix.target }} \
           -t ${{ env.PROJECT_NAME }}:${{ matrix.target }} \
           .
 
