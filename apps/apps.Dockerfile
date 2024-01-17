@@ -2,7 +2,6 @@ FROM golang:alpine AS builder
 #FROM base:go_builder as builder
 
 ARG PATH_TO_MAIN=default_value
-WORKDIR /build
 
 RUN apk update --no-cache && apk add --no-cache tzdata
 
@@ -11,6 +10,7 @@ ADD $PATH_TO_MAIN/go.sum .
 
 RUN go mod download
 
+WORKDIR /build
 COPY . .
 
 ENV CGO_ENABLED 0

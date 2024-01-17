@@ -40,7 +40,7 @@ jobs:
     strategy:
       matrix:
         target:
-          #- pingserver
+          - pingserver
           - hiserver
     steps:
       - uses: TooMuch4U/actions-clean@v2.1
