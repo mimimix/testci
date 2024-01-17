@@ -5,19 +5,20 @@ ARG PATH_TO_MAIN=default_value
 
 RUN apk update --no-cache && apk add --no-cache tzdata
 
-ADD ./apps/$PATH_TO_MAIN/go.mod .
-ADD ./apps/$PATH_TO_MAIN/go.sum .
+WORKDIR /build
+
+ADD $PATH_TO_MAIN/go.mod .
+ADD $PATH_TO_MAIN/go.sum .
 
 RUN go mod download
 
-WORKDIR /build
 COPY . .
 
 ENV CGO_ENABLED 0
 ENV GOOS linux
-ENV GOCACHE /home/user/.cache/go-build/$PATH_TO_MAIN
+ENV GOCACHE /home/user/.cache/go-build
 
-RUN --mount=type=cache,target=/home/user/.cache/go-build/$PATH_TO_MAIN go build -ldflags="-s -w" -o /app/main ./apps/$PATH_TO_MAIN/main.go
+RUN --mount=type=cache,target=/home/user/.cache/go-build go build -ldflags="-s -w" -o /app/main $PATH_TO_MAIN/main.go
 
 FROM alpine
 
